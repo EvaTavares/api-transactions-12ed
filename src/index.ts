@@ -4,6 +4,7 @@ import { appRoutes } from "./routes/user.routes";
 import * as dotenv from "dotenv";
 
 import pool from "./database/database.config";
+import { Database } from "./database/database.connection";
 
 dotenv.config();
 
@@ -13,19 +14,28 @@ app.use(cors());
 
 app.use("/users", appRoutes());
 
-app.listen(process.env.PORT, () => {
-  console.log("Servidor rodando na porta " + process.env.PORT + "!");
+Database.connect().then(() => {
+  console.log("Database is connected!");
+  app.listen(process.env.PORT, () => {
+    console.log("Servidor rodando na porta " + process.env.PORT + "!");
+  });
 });
 
-pool
-  .connect()
-  .then((connection) => {
-    console.log(connection);
-    console.log("conexão realiza dom sucesso");
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+// pool
+//   .connect()
+//   .then((connection) => {
+//     console.log(connection);
+//     console.log("conexão realiza dom sucesso");
+//     // listGrowdevers(connection);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+// async function lisGrowdevers(connection: PoolClient) {
+//   const result = await connection.query("select * from public.growdever");
+//   console.log(result.rows);
+// }
 
 // type User = {
 //     nome: string;
